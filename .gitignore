@@ -1,8 +1,6 @@
-*.toml
 *.mp3
 *.wav
 untracked/
 *.log
 __pycache__
-
-
+secrets.toml
