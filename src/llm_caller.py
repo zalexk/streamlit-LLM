@@ -19,7 +19,7 @@ def call(*prompt): # [system_prompt, user_prompt]
             }
         ],
         model = "gpt-4o-mini",
-        temperature =  0.2
+        temperature =  0.1
         
     )
     return chat_completion.choices[0].message.content
