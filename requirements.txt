@@ -3,3 +3,4 @@ streamlit==1.32.0
 SpeechRecognition
 langchain==0.0.345
 audio_recorder_streamlit
+google-search-results

@@ -3,7 +3,7 @@ from openai import OpenAI
 import streamlit as st
 
 client = OpenAI(
-    api_key = st.secrets["openai_api"],
+    api_key = st.secrets["openai_api"]
 )
 
 def call(*prompt): # [system_prompt, user_prompt]

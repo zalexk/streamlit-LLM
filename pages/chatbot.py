@@ -15,6 +15,7 @@ from langchain.prompts import (
 )
 from audio_recorder_streamlit import audio_recorder
 from src import llm_caller
+from src import search
 
 st.set_page_config(page_title = "Your Digital Assistant",
                    page_icon="👩‍🏫",
@@ -54,6 +55,26 @@ system_prompt="""
     Human: {user_question}
     AI:
 """
+
+enhancement_prompt = """
+你是一個提問機器人，你需要站在用戶的立場，你要重新組織用戶給你的問題，思考如何寫出一個好的提示詞。你的任務是負責潤色提示詞，使提示詞的用詞和語氣像真实的人一样自然，刪除無用的句子，例如值為 None 的句子。如果信息不詳，出現「某個」，且信息並沒有對解決問題有幫助，可以刪去。符合以上條件後，避免改變句子意思和信息量，直接輸出潤色後的結果即可。如果細節與背景明顯無關聯或者細節與背景相衝突，可以忽略和刪除背景，並且改進和優化提示詞。你不能回答他的任何問題，你只需要把用戶輸入的文字加工成一個好的提示詞。如果你不能處理用戶輸入的文字，則返回用戶輸入的原文，但切記不能回答用戶的問題和不能反問用戶，因為用戶無法回答你的反問句。如果用戶的問題很模糊，你不可以要求用戶提供更多資料，你返回的內容必須是疑問句或者是陳述句，最後輸出成一個適合詢問大預言模型的問題。
+
+一個好的提示詞通常具備以下幾個要求，請根據以下標准修改用戶輸入的文字：
+1. 清晰明確：Prompt 應該簡潔明瞭，避免模糊的表達，讓接收者能夠清楚理解要求。
+2. 具體性：提供具體的指示或問題，讓接收者能夠針對性地回應，而不是給出過於廣泛的答案。
+3. 上下文：提供必要的背景信息，幫助接收者理解問題的背景和目的。
+4. 開放性：在某些情況下，開放式的問題可以激發創造力，鼓勵更深入的思考和多樣化的回答。
+5. 適當的範圍：確保問題的範圍適中，不要過於狹窄或過於寬泛，以便能夠獲得有意義的回應。
+6. 引導性：可以適當引導接收者的思考方向，但不應過於限制，讓他們有自由發揮的空間。
+7. 語言簡單：使用易懂的語言，避免專業術語或複雜的句子結構，讓更多人能夠理解。
+這些要素能夠幫助創造出有效的 Prompt，促進更好的交流和理解。
+"""
+
+question_prompt = "你是一個提問機器人，你要重新組織用戶給你的問題，抽取當中的重點向搜索引擎詢問，例如與時間關聯性大的內容，即回答內容會隨著時間改變而不同。還需要重視用戶的問題中有特定的軟件、網頁或服務。要使用具體的關鍵詞而不是模糊的詞語，最後輸出成一個適合在搜索引擎上問的問題。"
+
+combine_prompt = "你是一個智能對答機器人，你要整理和合併兩個問答，你需要以 LLM 生成的問答為基礎，再以搜索引擎返回的結果作為補充。如果兩者出現明顯衝突，以搜索引擎返回的結果為主。同時你也要保留 LLM 生成問答的結構，再添加上搜索引擎返回的結果，盡量不要破壞原有結構，並最後整理最後結果的結構。"
+
+reject_prompt = "如果輸入的內容意思是拒絕回答，則返回 'True',否則返回'False'。如‘抱歉，我無法回答這個問題。我的任務是幫助解決電腦和科技方面的問題。如果您有任何關於電腦或科技的問題，請隨時告訴我，我會盡力幫助您解決。謝謝！’ 則返回 'True'。"
 
 user_query = ""
 
@@ -102,28 +123,33 @@ if "login_status" in st.session_state and st.session_state["login_status"] == Tr
             
             else:
                 msgs.add_ai_message("""
-""")
-        
-        enhancement_prompt = """
-        
-你是一個寫提示詞的機器人，你需要站在用戶的立場，思考如何寫出一個好的提示詞。你的任務是負責潤色提示詞，使提示詞的用詞和語氣像真实的人一样自然，刪除無用的句子，例如值為 None 的句子。如果信息不詳，出現「某個」，且信息並沒有對解決問題有幫助，可以刪去。符合以上條件後，避免改變句子意思和信息量，直接輸出潤色後的結果即可。如果細節與背景明顯無關聯或者細節與背景相衝突，可以忽略和刪除背景，並且改進和優化提示詞。你不能回答他的任何問題，你只需要把用戶輸入的文字加工成一個好的提示詞。如果你不能處理用戶輸入的文字，則返回用戶輸入的原文，但切記不能回答用戶的問題，而是讓用戶的問題問得更精准，更符合好提示詞的要求。你返回的內容必須是疑問句或者是祈使句。
-
-一個好的提示詞通常具備以下幾個要求，請根據以下標准修改用戶輸入的文字：
-1. 清晰明確：Prompt 應該簡潔明瞭，避免模糊的表達，讓接收者能夠清楚理解要求。
-2. 具體性：提供具體的指示或問題，讓接收者能夠針對性地回應，而不是給出過於廣泛的答案。
-3. 上下文：提供必要的背景信息，幫助接收者理解問題的背景和目的。
-4. 開放性：在某些情況下，開放式的問題可以激發創造力，鼓勵更深入的思考和多樣化的回答。
-5. 適當的範圍：確保問題的範圍適中，不要過於狹窄或過於寬泛，以便能夠獲得有意義的回應。
-6. 引導性：可以適當引導接收者的思考方向，但不應過於限制，讓他們有自由發揮的空間。
-7. 語言簡單：使用易懂的語言，避免專業術語或複雜的句子結構，讓更多人能夠理解。
-這些要素能夠幫助創造出有效的 Prompt，促進更好的交流和理解。
-"""
+ 为了使您寫出清晰、有針對性的 Prompt，的幾個步驟：
+                                    
+1. **明確問題：** 首先確定您遇到的具體問題，例如「我的電腦無法連接到 Wi-Fi」。
+    - 引導問題：我目前遇到的最大的問題是什麼？
+    - 引導問題：這個問題具體表現在哪裡？
+    
+2. **提供詳細背景：** 包括問題出現時的操作和環境，例如「每當我嘗試連接 Wi-Fi 時，電腦顯示無法連接」或「我使用的是 Windows 10 系統」。
+    - 引導問題：這個問題是在什麼情況下發生的？
+    - 引導問題：我使用的系統或設備具體是什麼？
+3. **列出嘗試過的解決方法：** 這有助於 AI 避免提供已經無效的建議，例如「我已經重啟了路由器和電腦，但問題依然存在」。
+    - 引導問題：我已經嘗試過哪些方法來解決這個問題？
+    - 引導問題：哪一種解決方法是無效的？
+4. **提出具體需求：** 明確說明您希望得到的幫助，例如「如何解決這個問題？」或「請告訴我可能的解決方法」。
+    - 引導問題：我希望 AI 幫我解決什麼具體問題？
+    - 引導問題：我需要哪方面的詳細建議？
+舉個例子，一個好的 Prompt 可能是：「我的 Windows 10 電腦無法連接 Wi-Fi，每次嘗試連接時都顯示無法連接。我已經重啟了路由器和電腦，但問題依舊。請問有什麼解決方法？」
+遵循這些步驟，您將能夠寫出針對性強且易於理解的 Prompt，從而獲得更精確、有效的幫助。""")
         
     
         with st.sidebar:
             prompt_enhance_disabled = st.checkbox("關閉自動提示詞潤色", 
                                          value = False,
                                          help = "點擊停止用 AI 潤色你的提示詞，如使用側邊欄輸入框，則提示詞會自動潤色")
+            
+            search_disabled = st.checkbox("關閉聯網搜索功能", 
+                                         value = True,
+                                         help = "點擊停止用 Google 搜索引擎來輔助大語言模型回答，回答內容可能不會是最新的")
             # Initiate the default value
             input_disabled, platform, service, version = None, None, None, None
             
@@ -203,16 +229,35 @@ if "login_status" in st.session_state and st.session_state["login_status"] == Tr
             with container1.chat_message("assistant"):
                 with st.spinner("生成需時，請耐心等候"):
                     response = coversation_chain.run(user_query)
-                    st.write(response)
+                    
+                    if search_disabled == False:
+                        rejected = llm_caller.call(reject_prompt,response)
+                        if rejected == False:
+                            question = llm_caller.call(question_prompt,user_query)
+                            search_result = search.google(question)
+                            
+                            response = llm_caller.call(combine_prompt,f"LLM 回答：{response}\n搜索結果：{search_result}")
                 
+                    st.write(response)
+
         elif audio_record and recognizer_state == "success":
             if prompt_enhance_disabled == False:
-                voice_to_text = user_query = llm_caller.call(enhancement_prompt,voice_to_text)
+                voice_to_text = llm_caller.call(enhancement_prompt,voice_to_text)
 
             container1.chat_message("user").write(voice_to_text)
             with container1.chat_message("assistant"):
                 with st.spinner("生成需時，請耐心等候"):
                     response = coversation_chain.run(voice_to_text)
+                    
+                    if search_disabled == False:
+                        rejected = llm_caller.call(reject_prompt,response)
+                        
+                        if rejected == False:
+                            question = llm_caller.call(question_prompt,user_query)
+                            search_result = search.google(question)
+                            
+                            response = llm_caller.call(combine_prompt,f"LLM 回答：{response}\n搜索結果：{search_result}")
+                
                     st.write(response)
                     recognizer_state = "finish"
 else:
