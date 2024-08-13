@@ -2,7 +2,7 @@ import streamlit as st
 import json
 import time
 
-st.set_page_config(page_title="Quiz",
+st.set_page_config(page_title="Quiz | iAsk",
                    page_icon="📕",
                    initial_sidebar_state = "collapsed")    
         
@@ -10,9 +10,9 @@ if "level" not in st.session_state:
     st.session_state.level = []
     
 elif len(st.session_state.level) >= 1:
-        st.success(f" **你已經填寫過了，請回到你原本的頁面**",icon = "⭕")
-        time.sleep(1)
-        st.switch_page("pages/chatbot.py")
+    st.success(f" **你已經填寫過了，請回到你原本的頁面**",icon = "⭕")
+    time.sleep(1)
+    st.switch_page("pages/chatbot.py")
         
 else:
     with st.form("Quiz"):
@@ -49,11 +49,11 @@ else:
         
             if score >= 5:
                 st.page_link("pages/chatbot.py", label="**你已經是熟練級別了**")
-                st.session_state.level.append("expert")
+                st.session_state["level"] = 'expert'
                 
             elif score >=0:
                 st.page_link("pages/chatbot.py", label="**你看來不是很熟悉大語言模型**")
-                st.session_state.level.append("begin")
+                st.session_state["level"] = 'begin'
 
             st.toast("請點擊按鈕跳到指定頁面，否則將在 10 秒後自動跳轉",icon = "💬")
             

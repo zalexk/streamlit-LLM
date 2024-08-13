@@ -1,5 +1,7 @@
 [theme]
 base = "dark"
+backgroundColor="#141415"
+
 
 [client]
 showSidebarNavigation = false

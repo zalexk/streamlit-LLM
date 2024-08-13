@@ -2,11 +2,12 @@ import streamlit as st
 from openai import OpenAI
 
 st.set_page_config(
-    page_title="Index",
+    page_title="Index | iAsk",
     page_icon="👋",
     initial_sidebar_state = "collapsed"
 )
-st.title("你的數碼小助手 Your Digital Assistant")
+
+st.title("👋 iAsk 你的數碼小助手")
 
 
 if "login_status" not in st.session_state or st.session_state["login_status"] == False:
@@ -29,11 +30,11 @@ if st.session_state["login_status"] == True:
     st.toast('Successfully logged in', icon="✅")
     st.markdown("""
                 ## 簡單介紹
-                大家好，歡迎來到我們的網站。 👋
+                大家好，歡迎來到我們的網站。 👏
                 
                 我們希望透過這個項目，讓你們在數碼世界中遇到任何挑戰，都求助有門。
                 
-                遇到不懂的歡迎前來詢問，我們的親切、耐心的人工智慧會努力解答你的一切問題的 😀
+                遇到不懂的歡迎前來詢問，我們的親切、耐心的人工智能机器人會努力解答你的一切問題的 😀
                 
                 """)
 
