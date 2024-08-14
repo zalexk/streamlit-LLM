@@ -5,4 +5,3 @@ langchain==0.0.345
 audio_recorder_streamlit
 google-search-results
 langchain_community
-langchain-google-community
