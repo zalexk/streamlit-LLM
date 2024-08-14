@@ -233,7 +233,7 @@ if "login_status" in st.session_state and st.session_state["login_status"] == Tr
                     
                     if search_disabled == False:
                         rejected = llm_caller.call(reject_prompt,response)
-                        if rejected == False:
+                        if rejected == "False":
                             question = llm_caller.call(question_prompt,user_query)
                             search_result = search.google(question)
                             
@@ -252,11 +252,10 @@ if "login_status" in st.session_state and st.session_state["login_status"] == Tr
                     
                     if search_disabled == False:
                         rejected = llm_caller.call(reject_prompt,response)
-                        
-                        if rejected == False:
+                        if rejected == "False":
                             question = llm_caller.call(question_prompt,user_query)
                             search_result = search.google(question)
-                            
+    
                             response = llm_caller.call(combine_prompt,f"LLM 回答：{response}\n搜索結果：{search_result}")
                 
                     st.write(response)
