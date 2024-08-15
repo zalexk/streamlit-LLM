@@ -19,3 +19,20 @@ python.exe setup.py # Configure the required key
 1. 運行：`streamlit run index.py` 
 2. 檢查瀏覽器，如無網頁自動開啟，輸入 `http://localhost:8501` 進入網頁
 3. 如欲結束運行，在终端按下 `Ctrl + C` 結束程序
+
+## 程序架構
+```
+.
+├── setup.py
+└── index.py
+    ├── pages
+    │   ├── chatbot.py
+    │   └── quiz.py
+    ├── src
+    │   ├── llm_caller.py
+    │   ├── search.py
+    │   └── quiz_question.json
+    └── .streamlit
+        ├── config.toml
+        └── secrets.toml
+```
