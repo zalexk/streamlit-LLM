@@ -207,7 +207,7 @@ if "login_status" in st.session_state and st.session_state["login_status"] == Tr
                 audio = recognizer.record(source)
                 
             try:
-                voice_to_text = recognizer.recognize_google(audio, language='zh-CN')
+                voice_to_text = recognizer.recognize_google(audio, language=yue')
                 
                 recognizer_state = "success"
                 
