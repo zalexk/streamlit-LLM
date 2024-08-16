@@ -20,6 +20,9 @@ python.exe setup.py # Configure the required key
 2. 檢查瀏覽器，如無網頁自動開啟，輸入 `http://localhost:8501` 進入網頁
 3. 如欲結束運行，在终端按下 `Ctrl + C` 結束程序
 
+### 部署
+由于项目是基于部署在 Streamlit Community Cloud 而開發，所以建議部署在 Streamlit Community Cloud，部署在其他服務有機會有不兼容的情況。已知第三方服務通過系統變量讀取秘鑰，而非 Streamlit 的 `st.secrets[key]`，所以部署本項目時需要更改相關代碼。
+
 ## 程序架構
 ```
 .
