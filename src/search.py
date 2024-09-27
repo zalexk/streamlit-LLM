@@ -11,6 +11,6 @@ llm = ChatOpenAI(openai_api_key = st.secrets["openai_api"],
 
 def google(question):
     tools = load_tools(["serpapi"])
-    agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
+    agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, handle_parsing_errors=True)
     response = agent.run(question)
     return response
