@@ -329,9 +329,14 @@ if "login_status" in st.session_state and st.session_state["login_status"] == Tr
                         rejected = llm_caller.call(reject_prompt,response)
                         if rejected == "False":
                             question = llm_caller.call(question_prompt,user_query)
-                            search_result = search.google(question)
-                            
-                            response = llm_caller.call(combine_prompt,f"LLM 回答：{response}\n搜索結果：{search_result}")
+                            try:
+                                search_result = search.google(question)
+                            except ValueError as e:
+                                st.rerun()
+                            except Exception as e:
+                                st.rerun()
+                            finally:
+                                response = llm_caller.call(combine_prompt,f"LLM 回答：{response}\n搜索結果：{search_result}")
                 
                     st.write(response)
 
@@ -348,9 +353,14 @@ if "login_status" in st.session_state and st.session_state["login_status"] == Tr
                         rejected = llm_caller.call(reject_prompt,response)
                         if rejected == "False":
                             question = llm_caller.call(question_prompt,user_query)
-                            search_result = search.google(question)
-    
-                            response = llm_caller.call(combine_prompt,f"LLM 回答：{response}\n搜索結果：{search_result}")
+                            try:
+                                search_result = search.google(question)
+                            except ValueError as e:
+                                st.rerun()
+                            except Exception as e:
+                                st.rerun()
+                            finally:
+                                response = llm_caller.call(combine_prompt,f"LLM 回答：{response}\n搜索結果：{search_result}")
                 
                     st.write(response)
                     recognizer_state = "finish"
