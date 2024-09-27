@@ -3,6 +3,7 @@ from langchain.agents import initialize_agent
 from langchain.chat_models import ChatOpenAI
 from langchain.agents import AgentType
 import streamlit as st
+import os
 
 llm = ChatOpenAI(openai_api_key = st.secrets["openai_api"],
                     model = "gpt-4o",
