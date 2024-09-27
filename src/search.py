@@ -9,6 +9,8 @@ llm = ChatOpenAI(openai_api_key = st.secrets["openai_api"],
                     temperature = 0.2,
                     base_url = st.secrets["base_url"])
 
+os.environ["SERPAPI_API_KEY"] = st.secrets["Serpapi_API_Key"]
+
 def google(question):
     tools = load_tools(["serpapi"])
     agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
