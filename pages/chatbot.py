@@ -196,7 +196,7 @@ if "login_status" in st.session_state and st.session_state["login_status"] == Tr
 
     with st.container():
 
-        container1 = st.container(height = None) # Size varies with the content
+        container1 = st.container(height = "content") # Size varies with the content
         
         if len(msgs.messages) == 0:
             
@@ -367,3 +367,4 @@ if "login_status" in st.session_state and st.session_state["login_status"] == Tr
 else:
     st.info("請先登錄")
     st.switch_page("index.py")
+
