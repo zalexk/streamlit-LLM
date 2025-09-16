@@ -186,7 +186,7 @@ if "login_status" in st.session_state and st.session_state["login_status"] == Tr
     prompt = ChatPromptTemplate.from_template(chatbot_prompt)
 
     llm = ChatOpenAI(openai_api_key = st.secrets["openai_api"], 
-                     model = "gpt-4o",
+                     model = "gemini-2.5-flash",
                      temperature = 0.2,
                      base_url = st.secrets["base_url"]) # Use AI Gateway (Optional)
 
@@ -367,4 +367,5 @@ if "login_status" in st.session_state and st.session_state["login_status"] == Tr
 else:
     st.info("請先登錄")
     st.switch_page("index.py")
+
 
