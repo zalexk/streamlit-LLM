@@ -3,7 +3,8 @@ from openai import OpenAI
 import streamlit as st
 
 client = OpenAI(
-    api_key = st.secrets["openai_api"]
+    api_key = st.secrets["openai_api"],
+    base_url = st.secrets["base_url"]
 )
 
 def call(*prompt): # [system_prompt, user_prompt]
@@ -22,4 +23,5 @@ def call(*prompt): # [system_prompt, user_prompt]
         temperature =  0.1
         
     )
+
     return chat_completion.choices[0].message.content
