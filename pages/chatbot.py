@@ -239,7 +239,7 @@ if "login_status" in st.session_state and st.session_state["login_status"] == Tr
     
         with st.sidebar:
             prompt_enhance_disabled = st.checkbox("關閉自動提示詞潤色", 
-                                         value = False,
+                                         value = True,
                                          help = "點擊停止用 AI 潤色你的提示詞，如使用側邊欄輸入框，則提示詞會自動潤色")
             
             search_disabled = st.checkbox("關閉聯網搜索功能", 
@@ -367,5 +367,6 @@ if "login_status" in st.session_state and st.session_state["login_status"] == Tr
 else:
     st.info("請先登錄")
     st.switch_page("index.py")
+
 
 
