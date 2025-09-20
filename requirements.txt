@@ -1,9 +1,10 @@
 openai
-streamlit==1.32.0
+streamlit
 SpeechRecognition
 langchain==0.0.345
 audio_recorder_streamlit
 google-search-results
 langchain_community
+
 
 
