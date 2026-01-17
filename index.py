@@ -9,6 +9,7 @@ st.set_page_config(
 
 st.title("👋 iAsk 你的數碼小助手")
 
+st.session_state["login_status"] = True # Remove password protection
 
 if "login_status" not in st.session_state or st.session_state["login_status"] == False:
     with st.form("login"):
@@ -25,7 +26,6 @@ if "login_status" not in st.session_state or st.session_state["login_status"] ==
             
             if submit == True and password != st.secrets["login"]: 
                 st.write(":red[Wrong password.Please try again]")
-
 if st.session_state["login_status"] == True:
     st.toast('Successfully logged in', icon="✅")
     st.markdown("""
