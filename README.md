@@ -22,7 +22,6 @@ python.exe setup.py # Configure the required key
 
 ### 部署
 由于项目是基于部署在 Streamlit Community Cloud 而開發，所以建議部署在 Streamlit Community Cloud，部署在其他服務有機會有不兼容的情況。已知第三方服務通過系統變量讀取秘鑰，而非 Streamlit 的 `st.secrets[key]`，所以部署本項目時需要更改相關代碼。
-1
 
 ## 程序架構
 ```
