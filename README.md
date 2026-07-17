@@ -40,3 +40,18 @@ python.exe setup.py # Configure the required key
         ├── config.toml
         └── secrets.toml
 ```
+## 程序架構
+```
+.
+├── setup.py
+└── index.py
+    ├── pages
+    │   ├── chatbot.py
+    │   └── quiz.py
+    ├── src
+    │   ├── llm_caller.py
+    │   ├── search.py
+    │   └── quiz_question.json
+    └── .streamlit
+        ├── config.toml
+        └── secrets.toml
